@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,7 +28,7 @@ public class TodoController {
 
     @RequestMapping("/todos")
     public String listAllTodos(ModelMap model) {
-        String username = (String)model.get("username");
+        String username = getLoggedInUsername(model);
         List<Todo> todos = todoService.findByUsername(username);
 //        logger.info("Todos: {}", todos);
 //        System.out.println("Todos: " + todos);
@@ -34,10 +36,12 @@ public class TodoController {
         return "listTodos";
     }
 
+
+
     @RequestMapping(value = "/add-todo", method = RequestMethod.GET)
     public String addTodo(ModelMap model) {
         //We pass an obj of ttodo to the view so that the form can bind to it and send it back to the server. This is called form backing object which is an alternative to using @RequestParam
-        String username = (String)model.get("username");
+        String username = getLoggedInUsername(model);
         //logger.info("Username: {}", username);
         Todo todo = new Todo(0, username, "", false, LocalDate.now());
         model.put("todo", todo);//The jsp form will bind to this object with the name todo
@@ -52,7 +56,7 @@ public class TodoController {
 
         //String username = "emmanuel";
         //TODO pass username from session
-        String username = (String)model.get("username");
+        String username = getLoggedInUsername(model);
 //        logger.info("Username: {}", username);
         todoService.addTodo(username,todo.getDescription(), todo.getDateline());
 
@@ -77,8 +81,15 @@ public class TodoController {
         if(result.hasErrors()) {
             return "updateTodo";
         }
-        String username = (String)model.get("username");
+        String username = getLoggedInUsername(model);
+        todo.setUsername(username);
         todoService.updateTodo(todo);
         return "redirect:/todos";
+    }
+
+    private String getLoggedInUsername(ModelMap model) {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }
