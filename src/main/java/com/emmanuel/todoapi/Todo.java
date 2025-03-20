@@ -1,6 +1,7 @@
 package com.emmanuel.todoapi;
 
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -8,9 +9,12 @@ import java.time.LocalDate;
 public class Todo {
     private int id;
     private String username;
+
     @Size(min = 10, message = "Mindestens 10 Zeichen eingeben...")
     private String description;
     private boolean done;
+
+    @Future(message = "Datum muss in der Zukunft liegen")
     private LocalDate dateline;
 
 

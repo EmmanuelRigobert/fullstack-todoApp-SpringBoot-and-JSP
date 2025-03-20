@@ -22,6 +22,7 @@ public class LoginController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+
     //http://localhost:8080/login
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     //The RequestMapping handles both GET and POST requests. When submitting th jsp form, the POST request is sent. But we don't want to handle the POST request in this method. So we use the RequestMethod.GET to handle only the GET request.

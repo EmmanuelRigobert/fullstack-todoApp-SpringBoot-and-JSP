@@ -12,11 +12,12 @@
         <div> Todos ${todos}</div>
         <table>
             <tr>
-                <th>Id</th>
                 <th>Username</th>
                 <th>Description</th>
                 <th>Target Date</th>
                 <th>Is Completed?</th>
+                <th>Update</th>
+                <th>Delete</th>
             </tr>
             <c:forEach items="${todos}" var="todo">
                 <tr>
@@ -25,6 +26,8 @@
                     <td>${todo.description}</td>
                     <td>${todo.dateline}</td>
                     <td>${todo.done}</td>
+                    <td><button><a href="/update-todo?id=${todo.id}">Update</a></button></td>
+                    <td><button><a href="/delete-todo?id=${todo.id}">Delete</a></button></td>
                 </tr>
             </c:forEach>
         </table>

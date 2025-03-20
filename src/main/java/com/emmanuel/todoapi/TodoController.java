@@ -26,7 +26,8 @@ public class TodoController {
 
     @RequestMapping("/todos")
     public String listAllTodos(ModelMap model) {
-        List<Todo> todos = todoService.findByUsername("emmanuel");
+        String username = (String)model.get("username");
+        List<Todo> todos = todoService.findByUsername(username);
 //        logger.info("Todos: {}", todos);
 //        System.out.println("Todos: " + todos);
         model.addAttribute("todos", todos);
@@ -37,7 +38,7 @@ public class TodoController {
     public String addTodo(ModelMap model) {
         //We pass an obj of ttodo to the view so that the form can bind to it and send it back to the server. This is called form backing object which is an alternative to using @RequestParam
         String username = (String)model.get("username");
-        logger.info("Username: {}", username);
+        //logger.info("Username: {}", username);
         Todo todo = new Todo(0, username, "", false, LocalDate.now());
         model.put("todo", todo);//The jsp form will bind to this object with the name todo
         return "addTodo";
@@ -45,16 +46,39 @@ public class TodoController {
 
     @RequestMapping(value = "/add-todo", method = RequestMethod.POST)
     public String addTodoPost(ModelMap model, @Valid Todo todo, BindingResult result) {
+        if(result.hasErrors()) {
+            return "addTodo";
+        }
+
         //String username = "emmanuel";
         //TODO pass username from session
         String username = (String)model.get("username");
 //        logger.info("Username: {}", username);
         todoService.addTodo(username,todo.getDescription(), todo.getDateline());
 
-        if(result.hasErrors()) {
-            return "addTodo";
-        }
 
+        return "redirect:/todos";
+    }
+
+    @RequestMapping(value = "/delete-todo", method = RequestMethod.GET)
+    public String deleteTodo(@RequestParam int id) {
+        todoService.deleteTodoById(id);
+        return "redirect:/todos";
+    }
+
+    @RequestMapping(value = "/update-todo", method = RequestMethod.GET)
+    public String updateTodo(@RequestParam int id, ModelMap model) {
+        Todo todo = todoService.findById(id);
+        model.put("todo", todo);
+        return "updateTodo";
+    }
+    @RequestMapping(value = "/update-todo", method = RequestMethod.POST)
+    public String updateTodoPost(ModelMap model, @Valid Todo todo, BindingResult result) {
+        if(result.hasErrors()) {
+            return "updateTodo";
+        }
+        String username = (String)model.get("username");
+        todoService.updateTodo(todo);
         return "redirect:/todos";
     }
 }
