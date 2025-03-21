@@ -14,7 +14,7 @@ public class TodoService {
     private static List<Todo> todos = new ArrayList<>();
 
     static {
-        todos.add(new Todo(todoCount++, "Emmanuel", "Learn Java", false, LocalDate.now().plusYears(1)));
+        todos.add(new Todo(todoCount++, "Emmanuel", "Learn Java1", false, LocalDate.now().plusYears(1)));
         todos.add(new Todo(todoCount++, "Emmanuel", "Learn Spring", false, LocalDate.now().plusYears(1)));
         todos.add(new Todo(todoCount++,"Emmanuel", "Learn Spring Boot", false, LocalDate.now().plusYears(1)));
         todos.add(new Todo(todoCount++,"Emmanuel", "Learn React", false, LocalDate.now().plusYears(2)));
@@ -26,8 +26,8 @@ public class TodoService {
         return todos.stream().filter(byUsername).toList();
     }
 
-    public void addTodo(String username, String description, LocalDate dateline) {
-        Todo todo = new Todo(todoCount++, username, description, false, dateline);
+    public void addTodo(String username, String description,Boolean done, LocalDate dateline) {
+        Todo todo = new Todo(todoCount++, username, description, done, dateline);
         todos.add(todo);
     }
 

@@ -1,12 +1,19 @@
 package com.emmanuel.todoapi;
 
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
+@Entity
 public class Todo {
+    @Id
+    @GeneratedValue
     private int id;
     private String username;
 
@@ -17,7 +24,8 @@ public class Todo {
     @Future(message = "Datum muss in der Zukunft liegen")
     private LocalDate dateline;
 
-
+    public Todo() {
+    }
 
     public Todo(int id, String username, String description, boolean done, LocalDate dateline) {
         this.id = id;
